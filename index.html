@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DeCKYizi · Статус проектов</title>
+  <meta name="description" content="Публичный read-only dashboard текущего состояния проектов DeCKYizi">
+  <style>
+    :root{
+      --bg:#08111f;--panel:#0f1b2d;--panel2:#13233a;--text:#eef4ff;--muted:#9fb0c8;
+      --line:#233652;--blue:#5aa9ff;--green:#49d17d;--yellow:#f3c65f;--red:#ff7b7b;--cyan:#64d8e8;
+      --shadow:0 18px 50px rgba(0,0,0,.28)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:radial-gradient(circle at top right,#143054 0,#08111f 36%,#07101c 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    a{color:inherit}
+    .wrap{width:min(1180px,calc(100% - 32px));margin:auto}
+    header{padding:56px 0 30px}
+    .eyebrow{display:inline-flex;gap:8px;align-items:center;padding:7px 11px;border:1px solid var(--line);background:rgba(19,35,58,.72);border-radius:999px;color:#c7d6ea;font-size:13px}
+    h1{font-size:clamp(34px,5vw,58px);line-height:1.02;margin:18px 0 12px;letter-spacing:-.03em}
+    .lead{font-size:18px;color:var(--muted);max-width:850px;line-height:1.55}
+    .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;color:#b9c7da;font-size:14px}
+    .meta span{padding:8px 10px;border-radius:10px;background:rgba(15,27,45,.78);border:1px solid var(--line)}
+    .hero-grid{display:grid;grid-template-columns:1.45fr .85fr;gap:18px;margin-top:28px}
+    .card{background:linear-gradient(180deg,rgba(19,35,58,.96),rgba(15,27,45,.96));border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
+    .hero-main{padding:26px}
+    .hero-side{padding:24px}
+    .kicker{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:#9fb0c8}
+    .big{font-size:44px;font-weight:800;margin:6px 0 6px}
+    .stage{font-size:20px;font-weight:700}
+    .deadline{font-size:28px;font-weight:800;color:#fff;margin-top:8px}
+    .sub{color:var(--muted);font-size:14px;line-height:1.5}
+    .progress{height:12px;border-radius:999px;background:#091525;border:1px solid #1a2b44;overflow:hidden;margin:18px 0 10px}
+    .progress>i{display:block;height:100%;width:63%;background:linear-gradient(90deg,#4f97ff,#65d3ea)}
+    .steps{display:grid;gap:10px;margin-top:18px}
+    .step{display:flex;gap:12px;align-items:flex-start;padding:11px 12px;background:#0c1828;border:1px solid #1d304b;border-radius:13px}
+    .num{min-width:26px;height:26px;border-radius:8px;background:#1e385b;color:#ddebff;display:grid;place-items:center;font-size:13px;font-weight:800}
+    .section{margin:34px 0}
+    .section-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin-bottom:15px}
+    h2{margin:0;font-size:28px;letter-spacing:-.02em}
+    .section-head p{margin:0;color:var(--muted);font-size:14px}
+    .project-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .project{padding:20px}
+    .project-top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+    .project h3{margin:0 0 6px;font-size:20px}
+    .status{display:inline-flex;align-items:center;gap:7px;color:#bfd0e5;font-size:13px}
+    .dot{width:9px;height:9px;border-radius:50%}
+    .dot.green{background:var(--green)} .dot.yellow{background:var(--yellow)} .dot.red{background:var(--red)} .dot.blue{background:var(--blue)}
+    .pct{font-size:28px;font-weight:800}
+    .bar{height:8px;border-radius:999px;background:#0a1524;overflow:hidden;border:1px solid #1e3049;margin:14px 0}
+    .bar span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#4d95ff,#5fd1df)}
+    dl{display:grid;grid-template-columns:115px 1fr;gap:8px 10px;margin:0;font-size:14px}
+    dt{color:#7f92ac}
+    dd{margin:0;color:#dbe7f7}
+    .attention{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .attention .item{padding:18px}
+    .attention h4{margin:0 0 8px;font-size:16px}
+    .attention p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+    .timeline{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+    .milestone{padding:15px 12px;border-radius:16px;background:#0e1b2d;border:1px solid var(--line);min-height:132px}
+    .milestone strong{display:block;font-size:14px;margin-bottom:6px}
+    .milestone small{color:#8295ae}
+    .milestone p{font-size:13px;line-height:1.45;color:#c6d5e8;margin:10px 0 0}
+    .legend{display:flex;gap:12px;flex-wrap:wrap;color:#9fb0c8;font-size:13px}
+    footer{padding:36px 0 56px;color:#8ea1ba;font-size:13px;line-height:1.6}
+    .safe{margin-top:12px;padding:12px 14px;border:1px solid #244360;background:rgba(10,24,40,.72);border-radius:14px;color:#b8c8dc;font-size:13px}
+    @media(max-width:900px){
+      .hero-grid,.project-grid,.attention{grid-template-columns:1fr}
+      .timeline{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:560px){
+      .wrap{width:min(100% - 20px,1180px)}
+      header{padding-top:30px}
+      .timeline{grid-template-columns:1fr}
+      dl{grid-template-columns:96px 1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">DeCKYizi · публичный статус проектов</div>
+      <h1>Что сделано, что сейчас, что дальше.</h1>
+      <div class="lead">Короткий read-only обзор текущего состояния рабочих направлений. Здесь только управленческий статус: этап, готовность, ближайший шаг и дедлайн — без исходников, внутренних идентификаторов и приватной инфраструктуры.</div>
+      <div class="meta">
+        <span>Обновлено: 23.09.2026</span>
+        <span>Формат: executive dashboard</span>
+        <span>Доступ: public read-only</span>
+      </div>
+
+      <div class="hero-grid">
+        <section class="card hero-main">
+          <div class="kicker">Главный активный проект</div>
+          <div class="big">Baikal Driver</div>
+          <div class="stage">Integration → Internal Test</div>
+          <div class="progress"><i></i></div>
+          <div class="sub">Готовность к интегрированному UAT: <strong style="color:#fff">≈63%</strong></div>
+          <div class="steps">
+            <div class="step"><div class="num">1</div><div><strong>Public API</strong><div class="sub">Подтвердить стабильный публичный runtime.</div></div></div>
+            <div class="step"><div class="num">2</div><div><strong>Live E2E</strong><div class="sub">Пройти полный тестовый сценарий от приложения до backend и обратно.</div></div></div>
+            <div class="step"><div class="num">3</div><div><strong>RC1 → UAT</strong><div class="sub">Собрать кандидат, smoke-test, закрытый пилот и финальную проверку.</div></div></div>
+          </div>
+        </section>
+        <aside class="card hero-side">
+          <div class="kicker">Дедлайн</div>
+          <div class="deadline">04.10.2026</div>
+          <p class="sub">Цель — интегрированный UAT Baikal Driver. После него — отдельное решение по release.</p>
+          <div style="height:16px"></div>
+          <div class="kicker">Ближайшая точка</div>
+          <div style="font-size:22px;font-weight:800;margin-top:8px">29–30.09</div>
+          <p class="sub">Feature complete / RC1 preparation.</p>
+          <div style="height:16px"></div>
+          <div class="kicker">Критический путь</div>
+          <p class="sub">API → E2E → readback → RC1 → pilot → regression → UAT.</p>
+        </aside>
+      </div>
+    </header>
+
+    <section class="section">
+      <div class="section-head">
+        <div><h2>Все направления</h2><p>Сначала общий статус, затем детали при необходимости.</p></div>
+        <div class="legend"><span>🟢 стабильно</span><span>🟡 в работе</span><span>🔴 требует внимания</span></div>
+      </div>
+      <div class="project-grid">
+        <article class="card project">
+          <div class="project-top"><div><h3>🚚 Baikal Driver System</h3><div class="status"><span class="dot yellow"></span>Integration → Internal Test</div></div><div class="pct">63%</div></div>
+          <div class="bar"><span style="width:63%"></span></div>
+          <dl><dt>Дедлайн</dt><dd>04.10.2026</dd><dt>Сейчас</dt><dd>Сборка полного интегрированного контура.</dd><dt>Дальше</dt><dd>Public API → live E2E → RC1.</dd></dl>
+        </article>
+        <article class="card project">
+          <div class="project-top"><div><h3>🤖 Driver / MAXBOT / Workflow</h3><div class="status"><span class="dot yellow"></span>Integration</div></div><div class="pct">65%</div></div>
+          <div class="bar"><span style="width:65%"></span></div>
+          <dl><dt>Дедлайн</dt><dd>04.10.2026</dd><dt>Сейчас</dt><dd>Перенос критичной логики в единый workflow.</dd><dt>Дальше</dt><dd>Native mutations и интегрированный runtime.</dd></dl>
+        </article>
+        <article class="card project">
+          <div class="project-top"><div><h3>🟢 Supabase / Driver Core</h3><div class="status"><span class="dot green"></span>Live foundation → Integration</div></div><div class="pct">80%</div></div>
+          <div class="bar"><span style="width:80%"></span></div>
+          <dl><dt>Дедлайн</dt><dd>04.10.2026</dd><dt>Сейчас</dt><dd>Backend foundation работает, идёт интеграция.</dd><dt>Дальше</dt><dd>Тестовый task/event path и auth controls.</dd></dl>
+        </article>
+        <article class="card project">
+          <div class="project-top"><div><h3>🗃️ SeaTable · Driver Integration</h3><div class="status"><span class="dot yellow"></span>Integration / UAT</div></div><div class="pct">55%</div></div>
+          <div class="bar"><span style="width:55%"></span></div>
+          <dl><dt>Дедлайн</dt><dd>04.10.2026</dd><dt>Сейчас</dt><dd>Входящий контур стабилен, обратный — на UAT.</dd><dt>Дальше</dt><dd>Один контролируемый end-to-end write/readback.</dd></dl>
+        </article>
+        <article class="card project">
+          <div class="project-top"><div><h3>🚛 Logist PWA / AWB</h3><div class="status"><span class="dot green"></span>UAT accepted for current scope</div></div><div class="pct">85%</div></div>
+          <div class="bar"><span style="width:85%"></span></div>
+          <dl><dt>Дедлайн</dt><dd>—</dd><dt>Сейчас</dt><dd>Текущий UAT принят и закрыт на этом этапе.</dd><dt>Дальше</dt><dd>Только при новом запросе или production hardening.</dd></dl>
+        </article>
+        <article class="card project">
+          <div class="project-top"><div><h3>👥 HR App</h3><div class="status"><span class="dot green"></span>UAT accepted / closed</div></div><div class="pct">90%</div></div>
+          <div class="bar"><span style="width:90%"></span></div>
+          <dl><dt>Дедлайн</dt><dd>—</dd><dt>Сейчас</dt><dd>Текущий UX scope принят.</dd><dt>Дальше</dt><dd>Новые изменения — отдельным этапом.</dd></dl>
+        </article>
+        <article class="card project">
+          <div class="project-top"><div><h3>🧱 SeaTable Core / MCP</h3><div class="status"><span class="dot yellow"></span>Internal Test / Hardening</div></div><div class="pct">60%</div></div>
+          <div class="bar"><span style="width:60%"></span></div>
+          <dl><dt>Дедлайн</dt><dd>—</dd><dt>Сейчас</dt><dd>Нормализация code/test/guarded integrations.</dd><dt>Дальше</dt><dd>Продолжать узкими проверяемыми итерациями.</dd></dl>
+        </article>
+        <article class="card project">
+          <div class="project-top"><div><h3>💰 Accounting Sync</h3><div class="status"><span class="dot red"></span>WIP / reconciliation</div></div><div class="pct">65%</div></div>
+          <div class="bar"><span style="width:65%"></span></div>
+          <dl><dt>Дедлайн</dt><dd>—</dd><dt>Сейчас</dt><dd>Сверка текущего хвоста данных.</dd><dt>Дальше</dt><dd>Fresh diff → маленькие порции → readback.</dd></dl>
+        </article>
+        <article class="card project">
+          <div class="project-top"><div><h3>🛰️ GPS / Telemetry</h3><div class="status"><span class="dot green"></span>Operations / Verified</div></div><div class="pct">95%</div></div>
+          <div class="bar"><span style="width:95%"></span></div>
+          <dl><dt>Дедлайн</dt><dd>Ежедневно</dd><dt>Сейчас</dt><dd>Операционный workflow стабилен.</dd><dt>Дальше</dt><dd>Обрабатывать следующий валидный дневной отчёт.</dd></dl>
+        </article>
+        <article class="card project">
+          <div class="project-top"><div><h3>📊 Director / Finance</h3><div class="status"><span class="dot green"></span>Stable baseline + narrow UAT</div></div><div class="pct">85%</div></div>
+          <div class="bar"><span style="width:85%"></span></div>
+          <dl><dt>Дедлайн</dt><dd>—</dd><dt>Сейчас</dt><dd>Основной baseline стабилен.</dd><dt>Дальше</dt><dd>Только узкие UAT/finance improvements.</dd></dl>
+        </article>
+        <article class="card project">
+          <div class="project-top"><div><h3>🇨🇳 China Applications</h3><div class="status"><span class="dot green"></span>Operational / controlled reissue</div></div><div class="pct">80%</div></div>
+          <div class="bar"><span style="width:80%"></span></div>
+          <dl><dt>Дедлайн</dt><dd>—</dd><dt>Сейчас</dt><dd>Правила и текущий исправленный набор стабильны.</dd><dt>Дальше</dt><dd>Новые массовые изменения — только по свежим источникам.</dd></dl>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><h2>Где сейчас внимание</h2><p>Три пункта, которые сильнее всего влияют на ближайший результат.</p></div></div>
+      <div class="attention">
+        <div class="card item"><h4>1 · Baikal Driver E2E</h4><p>Нужно доказать полный интегрированный путь от приложения до backend и обратно.</p></div>
+        <div class="card item"><h4>2 · SeaTable outbound</h4><p>Первый контролируемый обратный write/readback ещё является отдельной контрольной точкой.</p></div>
+        <div class="card item"><h4>3 · Accounting reconciliation</h4><p>Перед следующими изменениями нужен новый diff, чтобы исключить расхождения текущего состояния.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><h2>Roadmap Baikal Driver</h2><p>Текущий целевой путь до интегрированного UAT.</p></div></div>
+      <div class="timeline">
+        <div class="milestone"><small>23–29.09</small><strong>Integration</strong><p>API, workflow, core, SeaTable integration, PWA.</p></div>
+        <div class="milestone"><small>29.09</small><strong>Feature complete</strong><p>Целевой функциональный срез собран.</p></div>
+        <div class="milestone"><small>30.09</small><strong>RC1</strong><p>Smoke-test и кандидат на UAT.</p></div>
+        <div class="milestone"><small>01–02.10</small><strong>Closed pilot</strong><p>Ограниченная проверка на реальном сценарии.</p></div>
+        <div class="milestone"><small>02.10</small><strong>Code freeze</strong><p>Фиксация функционального scope.</p></div>
+        <div class="milestone"><small>03–04.10</small><strong>Regression</strong><p>Security/offline/rollback/final checks.</p></div>
+        <div class="milestone"><small>04.10</small><strong>UAT</strong><p>Интегрированная приёмка текущего scope.</p></div>
+      </div>
+    </section>
+
+    <div class="safe">Публичная страница не содержит исходный код, приватные ссылки на PR, токены, внутренние ID, персональные данные, credentials или прямой доступ к production-системам.</div>
+
+    <footer>
+      DeCKYizi · Public Project Status · read-only summary.<br>
+      Проценты — управленческая оценка текущего согласованного scope и обновляются по мере появления подтверждённого результата.
+    </footer>
+  </div>
+</body>
+</html>
