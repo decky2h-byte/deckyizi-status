@@ -1,33 +1,30 @@
 # DeCKYizi · Public Project Status
 
-Публичный read-only обзор текущих проектов.
+Публичный sanitized read-only обзор подтверждённого состояния на **24.09.2026**.
 
-| Проект | Готовность | Этап | Дедлайн / режим | Следующий шаг |
-|---|---:|---|---|---|
-| 🚚 **Baikal Driver System** | **63%** | Integration → Internal Test | **04.10.2026** | Public API → live E2E → RC1 |
-| 🤖 **Driver / MAXBOT / Workflow** | **65%** | Integration | **04.10.2026** | Native workflow → integrated runtime |
-| 🟢 **Supabase / Driver Core** | **80%** | Live foundation → Integration | **04.10.2026** | Controlled task/event path |
-| 🗃️ **SeaTable Driver Integration** | **55%** | Integration / UAT | **04.10.2026** | Controlled end-to-end write/readback |
-| 🚛 **Logist PWA / AWB** | **85%** | UAT accepted | — | Closed for current scope |
-| 👥 **HR App** | **90%** | UAT accepted / closed | — | Closed for current scope |
-| 🧱 **SeaTable Core / MCP** | **60%** | Internal Test / Hardening | — | Narrow guarded improvements |
-| 💰 **Accounting Sync** | **65%** | WIP / reconciliation | — | Fresh diff → small batches → readback |
-| 🛰️ **GPS / Telemetry** | **95%** | Operations / Verified | Daily | Next valid daily report |
-| 📊 **Director / Finance** | **85%** | Stable baseline + narrow UAT | — | Narrow improvements only |
-| 🇨🇳 **China Applications** | **80%** | Operational | — | Fresh-source controlled updates |
+| Верхнеуровневый контур | Готовность | Этап / режим | Следующий шаг |
+|---|---:|---|---|
+| 🚚 **Baikal Driver System** | **63%** | Paused / reference state | Только после явного reopen |
+| 🚛 **Logist PWA / AWB** | **85%** | UAT accepted for current scope | Closed for now |
+| 👥 **HR App** | **90%** | UAT accepted / closed | Reopen only if needed |
+| 🧱 **SeaTable Core / MCP** | **60%** | Hardening / guarded operations | Restore test → backup schedule decision |
+| 💰 **Accounting Sync** | **65%** | WIP / reconciliation | Fresh diff → 1–2 ops → exact readback |
+| 🛰️ **GPS / Telemetry** | **95%** | Operations / verified through 24.09 | Next valid daily report |
+| 📊 **Director / Finance** | **85%** | Stable baseline + narrow UAT | Narrow verified improvements only |
+| 🇨🇳 **China Applications** | **80%** | Operational / controlled reissue | Fresh-source controlled updates |
 
-## Main target
+## Overall
 
-**Baikal Driver integrated UAT — 04.10.2026**
+**≈78%** = simple average across the 8 top-level scopes above.
 
-Roadmap: Integration → Feature complete → RC1 → Closed pilot → Regression → UAT.
+Baikal Driver internal workstreams are **not counted a second time**. Open/draft review work is **not treated as Done**.
+
+## Current focus
+
+Accounting ↔ SeaTable reconciliation and guarded SeaTable operations. Baikal Driver is paused, so the former Driver UAT date is not presented as an active portfolio commitment.
 
 ## Public dashboard
 
-GitHub Pages URL after Pages activation:
+https://decky2h-byte.github.io/deckyizi-status/
 
-**https://decky2h-byte.github.io/deckyizi-status/**
-
-This public repository intentionally contains no private source code, credentials, internal IDs, private PR links, personal data, or direct production access.
-
-> Percentages are management estimates of the current agreed scope, not code-completion percentages.
+This repository intentionally contains no private PR links, internal identifiers, credentials, PII, security-sensitive implementation details, or production access.
